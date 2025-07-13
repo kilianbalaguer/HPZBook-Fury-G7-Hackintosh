@@ -21,7 +21,7 @@ Welcome to the full guide for setting up macOS 26 Tahoe Beta on your HP ZBook Fu
 13. **Reboot**, go to BIOS > Boot Order
 14. Set the **macOS disk first** so OpenCore loads from it (macOS won't boot without OpenCore)
 15. You can boot into Windows/Linux from OpenCore menu (recommended)
-16. For Linux booting, see: [`Docs/LinuxDualBoot.md`](Docs/LinuxDualBoot.md) – enable `OpenLinuxBoot.efi` in OpenCore Configurator > UEFI > Drivers tab
+16. For Linux booting, see: [`Docs/LinuxDualBoot.md`](./LinuxDualBoot.md) – enable `OpenLinuxBoot.efi` in OpenCore Configurator > UEFI > Drivers tab
 17. After booting macOS, **run One-Key HiDPI** to patch screen + EDID.
 
 ---
