@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="700" height="700" alt="wmremove-transformed-2" src="https://github.com/user-attachments/assets/033e6d3f-374c-493f-af12-6482decbcd78" />
+  <img width="700" height="700"  src="./Assets/TopScreenshotModel.png" />
 </div>
 
 
@@ -84,7 +84,7 @@ Covers:
 
 ## 📸 Preview
 
-![screenshot](assets/preview.png)
+![screenshot](./Assets/Screenshot1.png)
 
 ---
 
