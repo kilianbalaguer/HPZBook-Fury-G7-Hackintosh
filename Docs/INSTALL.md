@@ -4,25 +4,46 @@ Welcome to the full guide for setting up macOS 26 Tahoe Beta on your HP ZBook Fu
 
 ---
 
+## ✅ Step-by-Step Installation Overview
+
+1. **Download EFI folder** from this GitHub repo.
+2. **Download macOS Sequoia Recovery** using `macrecovery.py` (see below).
+3. **Format USB drive** as FAT32 + GUID using Disk Utility or Rufus.
+4. **Copy the EFI** to the USB’s EFI partition.
+5. **Copy the Recovery files** (`BaseSystem.dmg` and `.chunklist`) into `/Com.apple.recovery.boot/`.
+6. **Edit `itlwm.kext` Info.plist** to pre-configure Wi-Fi for recovery.
+7. **Change BIOS settings** (disable Secure Boot, VT-d, HP Sure Start, etc.)
+8. **Boot USB and install macOS** using recovery.
+9. ⚠️ If screen goes grey/black after Apple logo: **close lid, wait 5+ seconds, reopen**.
+10. **Download OpenCore Configurator**: [https://mackie100projects.altervista.org/download-opencore-configurator/](https://mackie100projects.altervista.org/download-opencore-configurator/)
+11. Use it to **mount your internal disk’s EFI partition**
+12. **Copy the USB EFI folder** to your internal disk EFI partition
+13. **Reboot**, go to BIOS > Boot Order
+14. Set the **macOS disk first** so OpenCore loads from it (macOS won't boot without OpenCore)
+15. You can boot into Windows/Linux from OpenCore menu (recommended)
+16. For Linux booting, see: [`Docs/LinuxDualBoot.md`](Docs/LinuxDualBoot.md) – enable `OpenLinuxBoot.efi` in OpenCore Configurator > UEFI > Drivers tab
+17. After booting macOS, **run One-Key HiDPI** to patch screen + EDID.
+
+---
+
 ## 📄 Required Files & Tools
 
-- A USB stick (at least **4GB**, **FAT32** recommended)
-  - If using a USB larger than **16 GB**, format with **Rufus** (FAT32)
-- [Python 3.x](https://www.python.org/) installed on your system
-- `macrecovery.py` from OpenCorePkg
-- This repo's `EFI` folder
+* A USB stick (at least **4GB**, **FAT32** recommended)
+
+  * If using a USB larger than **16 GB**, format with **Rufus** (FAT32)
+* [Python 3.x](https://www.python.org/) installed on your system
+* `macrecovery.py` from OpenCorePkg
+* This repo's `EFI` folder
 
 ---
 
 ## 📀 Download macOS Recovery via macrecovery.py
 
-You do **not** need a full macOS install app. We'll download the recovery files directly using OpenCore's tools.
-
 ### 1. Get `macrecovery.py`
 
-- Download OpenCorePkg: [https://github.com/acidanthera/OpenCorePkg](https://github.com/acidanthera/OpenCorePkg)
-- Navigate to: `Utilities/macrecovery/`
-- Copy `macrecovery.py` to your working folder
+* Download OpenCorePkg: [https://github.com/acidanthera/OpenCorePkg](https://github.com/acidanthera/OpenCorePkg)
+* Navigate to: `Utilities/macrecovery/`
+* Copy `macrecovery.py` to your working folder
 
 ### 2. Download Recovery for Sequoia
 
@@ -38,84 +59,85 @@ This downloads macOS **Sequoia recovery** (macOS 15 / version 26 base).
 
 ## 💻 Format USB for OpenCore
 
-### ✅ Best Practices:
+* Use **FAT32 + GUID Partition Table** (GPT) format
+* If your USB is larger than 16 GB, use [**Rufus**](https://rufus.ie) in Windows
 
-- Use **FAT32 + GUID Partition Table** (GPT) format
-- If your USB is larger than 16 GB, use [**Rufus**](https://rufus.ie) in Windows to create GPT + FAT32 manually
+On macOS:
 
-### On Windows (Rufus):
-
-- Select your USB
-- Partition Scheme: **GPT**
-- File system: **FAT32**
-
-### On macOS:
-
-Use Disk Utility > Show All Devices > Erase:
-
-- Format: **MS-DOS (FAT32)**
-- Scheme: **GUID Partition Map**
-
----
-
-## 🔧 Create USB Installer
-
-1. Mount your USB drive's EFI partition (on Windows: use MountEFI; on macOS: use `diskutil`)
-2. Copy your `EFI` folder from this repo into the EFI partition
-3. Copy the `BaseSystem.chunklist` and `BaseSystem.dmg` downloaded from `macrecovery.py` into:
-   ```
-   /Com.apple.recovery.boot/
-   ```
-   Create the folder manually if needed.
-
----
-
-## 🚀 Boot & Install
-
-1. Boot your HP ZBook and hit `Esc` or `F9` to enter the boot menu
-2. Choose your USB
-3. Select **macOS Installer**
-4. Use Disk Utility to erase your internal NVMe (APFS + GPT)
-5. Proceed with install
-
----
-
-## 🧪 Post-Install
-
-- Copy `EFI` folder to internal EFI partition after install
-- Run [**One-Key HiDPI**](https://github.com/xzhih/one-key-hidpi)
-  - Use **4K + EDID patch** for full boot + GUI fix
-- If you see a black screen after Apple logo loading:
-  - Close the lid
-  - Reopen it
-  - macOS should appear and boot normally
-
----
-
-## 🚫 Things to Remember
-
-- This guide assumes you’re installing Sequoia, then upgrading to Tahoe
-- Tahoe Internet Recovery **does not exist** yet
-- Your USB must be **GPT + FAT32** or OpenCore will **fail to boot**
+* Use Disk Utility > Show All Devices > Erase
+* Format: **MS-DOS (FAT32)**
+* Scheme: **GUID Partition Map**
 
 ---
 
 ## 🔌 Wi-Fi Required for Recovery (MANDATORY)
 
-❗ **Important**: Without working Wi-Fi in Recovery, macOS installation will **fail** to proceed.
+❗ **Without working Wi-Fi in Recovery, macOS installation will fail**.
 
-- **AirportItlwm** does **not** work in Sequoia or Tahoe recovery mode.
-- You **must** use `itlwm.kext` and edit its **Info.plist** to preconfigure Wi-Fi:
-  1. Navigate to: `itlwm.kext/Contents/Info.plist`
-  2. Go to: `IOKitPersonalities/itlwm/WiFiConfig/WiFi_1`
-  3. Change the `SSID` and `Password` keys to match your Wi-Fi network
-  4. Save and re-sign the kext if needed (optional but recommended)
+* AirportItlwm does not work in Sequoia/Tahoe recovery
+* Use `itlwm.kext` and edit `Info.plist`:
 
-> 🛠 You can edit with `PlistEdit Pro`, `Xcode`, or even `nano`.
+  1. Go to: `itlwm.kext/Contents/Info.plist`
+  2. Navigate to: `IOKitPersonalities/itlwm/WiFiConfig/WiFi_1`
+  3. Enter your real `SSID` and `Password`
+  4. Save the file
 
-✅ This ensures that Wi-Fi connects **automatically during recovery**, allowing internet-required components to function.
+✅ This connects Wi-Fi automatically in recovery mode.
+
+---
+
+## ⚙️ BIOS Configuration (IMPORTANT)
+
+Before installation, change these BIOS settings:
+
+* ❌ Disable **Secure Boot**
+* ❌ Disable **VT-d**
+* ❌ Disable **Fast Boot**
+* ❌ Disable **HP Sure Start**
+* ✅ Enable **UEFI Boot Mode**
+* ✅ Enable **USB Boot Support**
+* ✅ Set **Graphics Mode** to `Hybrid` or `iGPU only`
+
+Save changes and reboot.
+
+---
+
+## 🚀 Boot & Install
+
+1. Boot HP ZBook → press `Esc` or `F9`
+2. Select the USB boot device
+3. Choose **macOS Installer**
+4. Use Disk Utility to format internal disk (APFS + GPT)
+5. Continue with macOS install
+
+⚠️ If screen goes grey/black after Apple logo (backlight on):
+
+* Close the lid
+* Wait at least **5 seconds**
+* Reopen lid → macOS should appear
+
+---
+
+## 🧪 Post-Install – One-Key HiDPI
+
+Run [**One-Key HiDPI**](https://github.com/xzhih/one-key-hidpi):
+
+```bash
+git clone https://github.com/xzhih/one-key-hidpi
+cd one-key-hidpi
+chmod +x hidpi.sh
+./hidpi.sh
+```
+
+Steps:
+
+* Press **2** → HiDPI + EDID
+* Press **3** → MacBook Pro spoof
+* Choose native or ideal resolution (e.g. `1920x1080` for 1080p)
+* Confirm and reboot
+
+✅ This fixes both GUI scaling and boot display detection.
 
 ---
 
 Happy Hacking! ✨
-
