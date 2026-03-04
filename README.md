@@ -4,6 +4,16 @@
 
 # 🍎 HP ZBook Fury G7 Hackintosh – Quad Boot with macOS 26 Tahoe
 
+> [!WARNING]
+> ## ⚠️ READ THIS BEFORE OPENING AN ISSUE (2026-03-04)
+> I **sold** the **HP ZBook Fury 15 G7**. I **do not have this laptop anymore**, so I **cannot test or fix** new hardware-specific problems for this build.
+>
+> **Issue policy**
+> - ❌ **Fix requests / bug reports** (Wi‑Fi, sleep, graphics, etc.) will likely be **closed or ignored**
+> - ✅ **Install/help questions** (how to install, settings, guide questions, etc.) are still welcome and will **NOT** be ignored
+>
+> **Current setup:** MacBook Pro 2017 15-inch (triple‑boot): **Arch Linux + Windows 11 + macOS Sequoia**
+
 > ⚠️ **First Boot Warning**
 > If you see a **black screen after the Apple loading bar**, simply **close and reopen the lid**.
 > Then apply the **4K + EDID patch** using [One-Key HiDPI](https://github.com/xzhih/one-key-hidpi) to fix GUI scaling and boot screen visibility permanently.
